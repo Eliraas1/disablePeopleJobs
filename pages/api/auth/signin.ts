@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           message: "Invalid email or password",
         });
 
-      const { password, _id, email, name, contracts } = user;
+      const { password, _id, email, name, jobs } = user;
       const accessToken = generateAccessToken({
         email: email as string,
         userId: _id as string,
@@ -75,7 +75,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             _id,
             email,
             name,
-            contracts,
+            jobs,
             isSignIn: true,
           },
         },

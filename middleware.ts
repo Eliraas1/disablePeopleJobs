@@ -1,15 +1,8 @@
-import { verify } from "jsonwebtoken";
 import { UserType } from "Models/User";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
-import { getUserByEmail, getUserById } from "./lib/services/users";
-import { jwtVerify, SignJWT, type JWTPayload } from "jose";
-// import { authenticateAccessToken } from "./lib/services/jwt";
-// import { Request } from "./lib/services/jwt";
-import cookie from "cookie";
-import { getCookieParser } from "next/dist/server/api-utils";
+import { jwtVerify, SignJWT } from "jose";
 import moment from "moment";
-import dbConnect from "./lib/dbConnect";
 import { UserState } from "store/slices/userSlice";
 export interface Request extends NextRequest {
   user: UserState; // Replace "any" with the type of your user object
@@ -17,24 +10,13 @@ export interface Request extends NextRequest {
 export interface ApiRequest extends NextApiRequest {
   user: UserType; // Replace "any" with the type of your user object
 }
-//   export const authenticateAccessToken = async (
-//     req: Request,
-//     res: NextApiResponse
-//   ) => {
-
-//   };
 declare global {
   var myId: any; // This must be a `var` and not a `let / const`
 }
 export async function middleware(req: Request) {
-  // if (req.nextUrl.pathname.startsWith("/users")) {
-  // This logic is only applied to /about
-
   const res = NextResponse.next();
   const accessToken: string = req.cookies.get("accessToken")?.value || "";
   const refreshToken: string = req.cookies.get("refreshToken")?.value || "";
-  // console.log("access token", accessToken);
-  // console.log("refresh token", refreshToken);
   if (!accessToken) {
     console.log("no access token");
     return NextResponse.rewrite(new URL("/api/error", req.url));
@@ -48,8 +30,6 @@ export async function middleware(req: Request) {
 
   try {
     const { payload } = await jwtVerify(accessToken, accessSecret);
-    // res.headers.set("X-HEADER", payload?.userId as string);
-    // console.log("x-header", res.headers.get("X-HEADER"));
 
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("X-HEADER", payload?.userId as string);
@@ -81,17 +61,7 @@ export async function middleware(req: Request) {
         .setProtectedHeader({ alg })
         .setExpirationTime("2h")
         .sign(refreshSecret);
-      //   await dbConnect();
-      //   let user = await getUserByEmail(decoded?.email as string);
 
-      //   if (!user) {
-      //     user = (await getUserById(decoded?.userId as string)) as UserType;
-      //   }
-
-      //   if (!user) {
-      //     return NextResponse.rewrite(new URL("/api/error", req.url));
-      //   }
-      // res.headers.set("X-HEADER", decoded?.userId as string);
       const requestHeaders = new Headers(req.headers);
       requestHeaders.set("X-HEADER", decoded?.userId as string);
 
@@ -133,15 +103,10 @@ export async function middleware(req: Request) {
       return NextResponse.rewrite(new URL("/api/error", req.url));
     }
   }
-
-  //   return NextResponse.rewrite(new URL("/api/auth/verify", req.url));
 }
 
 export const config = {
-  // api: {
-  //   bodyParser: {
-  //     sizeLimit: "3mb",
-  //   },
-  // },
+  //TODO: CHANGE TO JOBS
   matcher: ["/api/users/:path*", "/api/contract/:path*", "/dashboard/:path*"],
+  // matcher: ["/api/users/:path*", "/api/jobs/:path*", "/dashboard/:path*"],
 };

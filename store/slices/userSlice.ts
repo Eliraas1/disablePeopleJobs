@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { JobSubType } from "Models/Jobs";
 import { RootState } from "store/store";
 
 // Define a type for the slice state
@@ -10,23 +11,24 @@ export interface UserState {
   password?: string;
   isSignIn?: boolean;
   img?: string;
-  contracts?: UserContracts;
+  jobs: JobsType[];
+  appliedTo: JobsType[];
+  description?: string;
   token?: string;
   emailFromRegister?: string;
 }
-export interface UserContracts {
-  receive: ContractState[];
-  sending: ContractState[];
-}
-export interface ContractState {
+export interface JobsType {
   _id?: string;
-  carBrand?: string;
-  done?: boolean;
-  confirm?: boolean;
-  expires?: string;
-  from?: UserState;
-  to?: UserState;
-  decline?: boolean;
+  user?: UserState;
+  title: string;
+  description?: string;
+  location?: string;
+  category?: string;
+  subCategory?: string;
+  type?: JobSubType;
+  createdAt?: Date;
+  updatedAt?: Date;
+  appliedUsers?: UserState[];
 }
 // Define the initial state using that type
 const initialState: UserState = {
@@ -35,10 +37,12 @@ const initialState: UserState = {
   email: "",
   emailFromRegister: "",
   password: "",
+  description: "",
   img: undefined,
+  jobs: [],
+  appliedTo: [],
   isSignIn: false,
   token: "",
-  contracts: undefined,
 };
 
 export const userSlice = createSlice({
@@ -57,56 +61,25 @@ export const userSlice = createSlice({
       state = { ...initialState };
       return state;
     },
-    setContracts: (state, action: PayloadAction<UserContracts>) => {
-      state.contracts = { ...state.contracts, ...action.payload };
+    setJobs: (state, action: PayloadAction<JobsType>) => {
+      state.jobs?.push(action.payload);
       return state;
     },
-    setSendingContract: (state, action: PayloadAction<ContractState>) => {
-      const { _id, to, ...rest } = action.payload;
-      if (state.contracts && state.contracts.sending) {
-        const index = state.contracts.sending.findIndex(
-          (cont) => cont._id == _id
-        );
-        if (~index && state.contracts && state.contracts.sending[index]) {
-          state.contracts.sending[index] = {
-            ...state.contracts.sending[index],
-            to: { ...state.contracts.sending[index].to, email: to?.email },
-            ...rest,
-          };
-        }
-      }
+    deleteJobById: (state, action: PayloadAction<string>) => {
+      const index = state.jobs?.findIndex(
+        (item) => item._id === action.payload
+      );
+      if (~index && state.jobs[index]) state.jobs.splice(index, 1);
       return state;
     },
-    deleteContractById: (state, action: PayloadAction<string>) => {
-      if (state.contracts && state.contracts.sending) {
-        const index = state.contracts.sending.findIndex(
-          (cont) => cont._id == action.payload
-        );
-        if (~index && state.contracts && state.contracts.sending[index]) {
-          state.contracts.sending.splice(index, 1);
-          console.log("deleted");
-        }
-      }
+    editJob: (state, action: PayloadAction<JobsType>) => {
+      const { _id } = action.payload;
+      const index = state.jobs.findIndex((item) => item._id === _id);
+      state.jobs[index] = { ...action.payload };
       return state;
     },
-    setReceivingContract: (state, action: PayloadAction<ContractState>) => {
-      const { _id, confirm, decline } = action.payload;
-      console.log(_id, confirm, decline);
-      if (state.contracts && state.contracts.receive) {
-        const index = state.contracts.receive.findIndex(
-          (cont) => cont._id == _id
-        );
-        console.log(index);
-        if (~index && state.contracts && state.contracts.receive[index]) {
-          console.log("before", state.contracts.receive[index]);
-          state.contracts.receive[index] = {
-            ...state.contracts.receive[index],
-            confirm,
-            decline,
-          };
-          console.log("after", state.contracts.receive[index]);
-        }
-      }
+    apply: (state, action: PayloadAction<JobsType>) => {
+      state.appliedTo.push(action.payload);
       return state;
     },
   },
@@ -116,10 +89,10 @@ export const {
   setUser,
   login,
   logout,
-  setContracts,
-  setSendingContract,
-  deleteContractById,
-  setReceivingContract,
+  setJobs,
+  editJob,
+  apply,
+  deleteJobById,
 } = userSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
@@ -128,5 +101,6 @@ export const selectUserToken = (state: RootState) => state.user.token;
 export const selectIsSignIn = (state: RootState) => state.user.isSignIn;
 export const selectEmailFromRegister = (state: RootState) =>
   state.user.emailFromRegister;
-export const selectContracts = (state: RootState) => state.user.contracts;
+export const selectJobs = (state: RootState) => state.user.jobs;
+export const selectApplyJobs = (state: RootState) => state.user.appliedTo;
 export default userSlice.reducer;

@@ -28,7 +28,7 @@ export async function createUser(user: any) {
 
 export async function getUserById(id: string) {
   try {
-    const user: UserType | null = await User.findById(id);
+    const user = await User.findById(id).populate(["jobs", "appliedTo"]);
     return user;
   } catch (error: any) {
     return { error };
@@ -44,13 +44,13 @@ export const getUserByEmail = async (
     if (password) {
       user = await User.findOne({
         email,
-      }).select("+password");
-      // .populate(["tasks"]);
+      })
+        .select("+password")
+        .populate(["jobs", "appliedTo"]);
     } else {
       user = await User.findOne({
         email,
-      });
-      // .populate(["tasks"]);
+      }).populate(["jobs", "appliedTo"]);
     }
     return user as UserType;
   } catch (error: any) {

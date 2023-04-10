@@ -30,7 +30,7 @@ async function dbConnect() {
 
   if (!cached.promise) {
     const opts: ConnectOptions = {
-      dbName: "CyberApp",
+      dbName: "disablePeopleJobs",
     };
     mongoose.set("strictQuery", false);
     try {

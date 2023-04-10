@@ -77,7 +77,8 @@ export async function editJob(jobId: string, details: JobsType) {
       {
         _id: jobId,
       },
-      details
+      details,
+      { new: true }
     );
     return createdJob;
   } catch (error: any) {

@@ -6,7 +6,7 @@ export interface JobsType extends Document {
   user?: UserType;
   title: string;
   description?: string;
-  location?: UserType;
+  location?: string;
   category?: string;
   subCategory?: string;
   type?: JobSubType;

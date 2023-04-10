@@ -1,17 +1,8 @@
-import {
-  CombinedState,
-  combineReducers,
-  configureStore,
-} from "@reduxjs/toolkit";
-import userSlice, { UserState } from "./slices/userSlice";
-import { persistStore, persistReducer, PersistConfig } from "redux-persist";
-// import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
-// import storageSession from "reduxjs-toolkit-persist/lib/storage/session";
-// import { persistStore, persistReducer } from "reduxjs-toolkit-persist";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import userSlice from "./slices/userSlice";
+import { persistStore, persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import showSlice from "./slices/showSlice";
-// import { PersistConfig } from "reduxjs-toolkit-persist/lib/types";
-// import storage from "reduxjs-toolkit-persist/lib/storage"; // defaults to localStorage for web
 
 const createNoopStorage = () => {
   return {

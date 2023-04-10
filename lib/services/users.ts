@@ -1,4 +1,6 @@
+import Jobs from "Models/Jobs";
 import User, { UserType } from "Models/User";
+import { applyJob } from "./jobs.service";
 
 export async function getUsers() {
   try {
@@ -46,12 +48,26 @@ export const getUserByEmail = async (
         email,
       })
         .select("+password")
-        .populate(["jobs", "appliedTo"]);
+        .populate("jobs")
+        .populate("appliedTo");
     } else {
       user = await User.findOne({
         email,
-      }).populate(["jobs", "appliedTo"]);
+      })
+        .populate("jobs")
+        .populate("appliedTo");
     }
+    // const newJob = new Jobs({
+    //   title: "BI Developer",
+    //   description: "A job description",
+    //   location: "Beer-Sheva, Israel",
+    //   category: "Technology",
+    //   subCategory: "Web Development",
+    //   type: "Full time",
+    //   user,
+    // } as any);
+    // await newJob.save();
+    // await applyJob(user._id, newJob._id as string);
     return user as UserType;
   } catch (error: any) {
     throw new Error(error.message);

@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import useSWRMutation from "swr/mutation";
 import { json } from "node:stream/consumers";
 import { postRequest } from "pages/api/hello";
+import { WEB_TITLE } from "../../constants";
 
 interface props {
   users: UserType;
@@ -95,16 +96,16 @@ function Login() {
         onSubmit={handleSubmit}
         className="backdrop-blur bg-gray-300/60 animate__animated animate__fadeIn w-[25rem] shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2 relative"
       >
-        <h1 className="animate__animated animate__fadeInDown  mb-5 text-2xl">
+        <h1 className="animate__animated animate__fadeInDown  mb-5 text-2xl text-center">
           Welcome to
-          <span className="p-2  grid-cols-2 text-transparent bg-clip-text bg-gradient-to-r to-orange-400 from-sky-400 hover:to-sky-200 hover:from-orange-400">
-            TransCar
-            <img
+          {/* <span className="p-2  grid-cols-2 text-transparent bg-clip-text bg-gradient-to-r to-orange-400 from-sky-400 hover:to-sky-200 hover:from-orange-400"> */}
+          {" " + WEB_TITLE}
+          {/* <img
               src="/icon.png"
               className="mr-3 w-24 h-16 self-center animate__animated animate__fadeInRight animate__slower absolute right-0"
               alt="CarTrans Logo"
-            />
-          </span>
+            /> */}
+          {/* </span> */}
         </h1>
         {emailFromRegister ? (
           <div className="text-lime-500 animate__animated animate__fadeInDown  mb-5 text-xl">
@@ -158,7 +159,7 @@ function Login() {
             </p>
           )}
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center">
           <button
             className="bg-slate-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-row flex items-center  justify-evenly"
             type="submit"

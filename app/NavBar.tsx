@@ -8,7 +8,7 @@ import { redirect, useRouter } from "next/navigation";
 import { postRequest } from "pages/api/hello";
 import { Button, Navbar } from "flowbite-react";
 import { animateCSS, toggleAnimate } from "./SideBar";
-import Notifications from "./Components/Notifications";
+// import Notifications from "./Components/Notifications";
 
 function NavBar() {
   const router = useRouter();
@@ -64,20 +64,17 @@ function NavBar() {
           href="/"
         >
           <img
-            src="/icon.png"
+            src="/wheelchair-icon.png"
             className="mr-3 h-10 animate__animated animate__fadeInRight animate__slower"
-            alt="CarTrans Logo"
+            alt="Accessible Careers Logo"
           />
-          {/* <span className="self-center text-white whitespace-nowrap text-xl font-semibold dark:text-slate-400">
-            CarTrans
-          </span> */}
         </Navbar.Brand>
         <div className="flex md:order-2  ">
-          {isSignIn && (
+          {/* {isSignIn && (
             <div className="flex md:w-[12vw] lg:w-[15vw] xl:w-[20vw] 2xl:w-[20vw] items-center justify-start">
               <Notifications />
             </div>
-          )}
+          )} */}
           <Navbar.Toggle className="ml-3" />
         </div>
         <Navbar.Collapse>
@@ -115,7 +112,7 @@ function NavBar() {
                 href="/create-contract"
                 className="text-white whitespace-nowrap font-normal text-lg hover:text-gray-400 "
               >
-                Create Contract
+                Create Jobs
               </Link>
 
               <div
@@ -130,21 +127,15 @@ function NavBar() {
                 className=" text-white whitespace-nowrap font-normal text-lg cursor-pointer hover:text-gray-400"
               >
                 <span className="text-transparent bg-clip-text bg-gradient-to-r to-orange-400 from-sky-400 hover:to-sky-200 hover:from-orange-400">
-                  My Contracts
+                  My Jobs
                 </span>
               </div>
-              {/* </Navbar.Link> */}
-              {/* <Navbar.Link className="hover:bg-slate-600"> */}
               <div
                 onClick={logOut}
                 className=" text-white whitespace-nowrap font-normal text-lg cursor-pointer hover:text-gray-400"
               >
                 logout
               </div>
-              {/* <Navbar.Link> */}
-
-              {/* </Navbar.Link> */}
-              {/* </Navbar.Link> */}
             </>
           )}
         </Navbar.Collapse>

@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import useSWR from "swr";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
-  ContractState,
+  // ContractState,
   logout,
   selectUserToken,
-  setContracts,
+  // setContracts,
 } from "store/slices/userSlice";
 import LoadingSpinner from "./Components/LoadingSpinner";
 import Router from "next/router";
@@ -129,9 +129,9 @@ export default function SideBar() {
   return <RealSideBar />;
 }
 export function RealSideBar() {
-  const { data, error, isLoading } = useSWR("/api/contract/getMy", fetcher, {
-    refreshInterval: 10000,
-  });
+  // const { data, error, isLoading } = useSWR("/api/contract/getMy", fetcher, {
+  //   refreshInterval: 10000,
+  // });
   const dispatch = useAppDispatch();
   const [mySendingContracts, setMySendingContracts] = useState([]);
   const [myReceiveContracts, setMyReceiveContractsContracts] = useState([]);
@@ -167,21 +167,21 @@ export function RealSideBar() {
   useEffect(() => {
     animateCSS("aside", "fadeInLeft");
   }, []);
-  useEffect(() => {
-    if (data) {
-      if (data.status == 401) {
-        dispatch(logout());
-      }
-      dispatch(
-        setContracts({
-          receive: data.data?.myReceiveContracts,
-          sending: data.data?.mySendingContracts,
-        })
-      );
-      setMySendingContracts(data.data?.mySendingContracts);
-      setMyReceiveContractsContracts(data.data?.myReceiveContracts);
-    }
-  }, [data, error]);
+  // useEffect(() => {
+  //   if (data) {
+  //     if (data.status == 401) {
+  //       dispatch(logout());
+  //     }
+  //     dispatch(
+  //       setContracts({
+  //         receive: data.data?.myReceiveContracts,
+  //         sending: data.data?.mySendingContracts,
+  //       })
+  //     );
+  //     setMySendingContracts(data.data?.mySendingContracts);
+  //     setMyReceiveContractsContracts(data.data?.myReceiveContracts);
+  //   }
+  // }, [data, error]);
 
   return (
     <aside
@@ -195,12 +195,7 @@ export function RealSideBar() {
               <span className="p-2 text-transparent bg-clip-text bg-gradient-to-r to-orange-400 from-sky-400 hover:to-sky-200 hover:from-orange-400">
                 My Sending Contracts
               </span>
-              {isLoading && (
-                <div className="pt-6 pl-10">
-                  <LoadingSpinner />
-                </div>
-              )}
-              {mySendingContracts?.map((cont: ContractState) => (
+              {/* {mySendingContracts?.map((cont: ContractState) => (
                 <ContractElement
                   key={cont._id}
                   txt={"Contract " + cont.carBrand}
@@ -208,7 +203,7 @@ export function RealSideBar() {
                   decline={cont.decline as boolean}
                   _id={cont._id as string}
                 />
-              ))}
+              ))} */}
               {!mySendingContracts && (
                 <span className="flex-1 ml-3 whitespace-nowrap text-gray-400 font-normal text-lg">
                   No Contracts
@@ -219,12 +214,8 @@ export function RealSideBar() {
               <span className="p-2  text-transparent bg-clip-text bg-gradient-to-r to-sky-400 from-orange-400 hover:to-sky-200 hover:from-orange-400">
                 My Receiving Contracts
               </span>
-              {isLoading && (
-                <div className="pt-6 pl-10">
-                  <LoadingSpinner />
-                </div>
-              )}
-              {myReceiveContracts?.map((cont: ContractState) => (
+
+              {/* {myReceiveContracts?.map((cont: ContractState) => (
                 <ContractElement
                   key={cont._id}
                   txt={"Contract " + cont.carBrand}
@@ -232,7 +223,7 @@ export function RealSideBar() {
                   decline={cont.decline as boolean}
                   // _id={cont._id as string}
                 />
-              ))}
+              ))} */}
               {!myReceiveContracts && (
                 <span className="flex-1 ml-3 whitespace-nowrap text-gray-400 font-normal text-lg">
                   No Contracts
@@ -275,7 +266,7 @@ export function RealSideBar() {
               Sign Up
             </Sidebar.Item>
             <Sidebar.Item href="#" icon={CloseIcon}>
-              
+
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>

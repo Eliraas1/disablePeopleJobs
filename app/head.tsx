@@ -1,9 +1,9 @@
 export default function Head() {
   return (
     <>
-      <title>Trans Car official</title>
+      <title>Accessible Careers</title>
       <meta content="width=device-width, initial-scale=1" name="viewport" />
-      <link rel="icon" href="/icon.png" />
+      <link rel="icon" href="/wheelchair-icon.png" />
     </>
   );
 }

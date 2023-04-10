@@ -1,11 +1,9 @@
-import { createUser, getUserByEmail, getUsers } from "@/lib/services/users";
-import Error from "next/error";
+import { getUserByEmail } from "@/lib/services/users";
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "@/lib/dbConnect";
-import { UserType } from "Models/User";
 import moment from "moment";
 import cookie from "cookie";
-import { genSalt, hash, compareSync, hashSync, compare } from "bcrypt";
+import { compare } from "bcrypt";
 import { generateAccessToken, generateRefreshToken } from "@/lib/services/jwt";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -32,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           message: "Invalid email or password",
         });
 
-      const { password, _id, email, name, jobs } = user;
+      const { password, _id, email, name, jobs, appliedTo, description } = user;
       const accessToken = generateAccessToken({
         email: email as string,
         userId: _id as string,
@@ -77,6 +75,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             name,
             jobs,
             isSignIn: true,
+            appliedTo,
+            description,
           },
         },
       });

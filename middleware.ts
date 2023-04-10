@@ -32,6 +32,10 @@ export async function middleware(req: Request) {
     const { payload } = await jwtVerify(accessToken, accessSecret);
 
     const requestHeaders = new Headers(req.headers);
+    console.log(
+      "------------------------------------------------------------------------------------------------",
+      payload?.userId
+    );
     requestHeaders.set("X-HEADER", payload?.userId as string);
 
     // You can also set request headers in NextResponse.rewrite
@@ -107,6 +111,5 @@ export async function middleware(req: Request) {
 
 export const config = {
   //TODO: CHANGE TO JOBS
-  matcher: ["/api/users/:path*", "/api/contract/:path*", "/dashboard/:path*"],
-  // matcher: ["/api/users/:path*", "/api/jobs/:path*", "/dashboard/:path*"],
+  matcher: ["/api/users/:path*", "/api/jobs/:path*", "/dashboard/:path*"],
 };

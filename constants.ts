@@ -48,7 +48,7 @@
 //   "Volkswagen",
 //   "Volvo",
 // ];
-const jobCategories = [
+export const jobCategories = [
   "Accounting",
   "Administration",
   "Art and Design",
@@ -75,3 +75,4 @@ const jobCategories = [
   "Transportation",
   "Writing and Editing",
 ];
+export const WEB_TITLE = "Accessible Careers";

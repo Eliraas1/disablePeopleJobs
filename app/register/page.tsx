@@ -1,16 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Dots } from "react-activity";
-import { Inter } from "@next/font/google";
-import dbConnect from "@/lib/dbConnect";
-import { getUsers } from "@/lib/services/users";
-// import { useRouter } from "next/router";
 import { redirect, useRouter } from "next/navigation";
 import { login, selectUserToken, UserState } from "store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import useSWRMutation from "swr/mutation";
 import { postRequest } from "pages/api/hello";
-
+import { WEB_TITLE } from "../../constants";
 interface props {
   user: UserState;
 }
@@ -81,16 +76,16 @@ function Register() {
         onSubmit={handleSubmit}
         className="bg-white animate__animated animate__fadeIn w-[25rem] backdrop-blur bg-gray-300/60 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 flex flex-col my-2"
       >
-        <h1 className="animate__animated animate__fadeInDown  mb-5 text-2xl">
+        <h1
+          className="animate__animated animate__fadeInDown  mb-5 text-2xl text-center"
+          onClick={() => {
+            console.log("click");
+          }}
+        >
           Welcome to
-          <span className="p-2  grid-cols-2 text-transparent bg-clip-text bg-gradient-to-r to-orange-400 from-sky-400 hover:to-sky-200 hover:from-orange-400">
-            TransCar
-            <img
-              src="/icon.png"
-              className="mr-3 animate__animated animate__fadeInRight w-24 h-16 self-center absolute right-0"
-              alt="CarTrans Logo"
-            />
-          </span>
+          {/* <span className="p-2  grid-cols-2 text-transparent bg-clip-text bg-gradient-to-r to-red-400 from-sky-400 hover:to-sky-200 hover:from-orange-400"> */}
+          {" " + WEB_TITLE}
+          {/* </span> */}
         </h1>
         <div className="mb-4">
           <label
@@ -163,7 +158,7 @@ function Register() {
             </p>
           )}
         </div>
-        <div className="flex items-center justify-between  ">
+        <div className="flex items-center justify-center">
           <button
             className="backdrop-blur bg-gray-300/60 bg-slate-800 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline flex-row flex items-center  justify-evenly"
             type="submit"

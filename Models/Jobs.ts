@@ -14,7 +14,7 @@ export interface JobsType extends Document {
   updatedAt?: Date;
   appliedUsers?: UserType[];
 }
-const Jobs = new Schema(
+const JobsSchema = new Schema(
   {
     description: {
       type: String,
@@ -57,4 +57,5 @@ const Jobs = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Jobs || mongoose.model("Jobs", Jobs);
+export default mongoose.models.Jobs<JobsType> ||
+  mongoose.model<JobsType>("Jobs", JobsSchema);

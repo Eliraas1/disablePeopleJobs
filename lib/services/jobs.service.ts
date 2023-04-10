@@ -1,5 +1,5 @@
 import Jobs, { JobsType } from "Models/Jobs";
-import User from "Models/User";
+import User, { UserType } from "Models/User";
 
 export interface CreateJobProps {
   carBrand?: string;
@@ -19,8 +19,13 @@ export async function createJob(_id: string, job: JobsType) {
     const createdJob = await new Jobs({
       ...job,
       user,
-    });
+    } as any);
     await createdJob.save();
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id },
+      { $addToSet: { jobs: createdJob._id } },
+      { new: true }
+    );
     return createdJob;
   } catch (error: any) {
     throw new Error(error.message as string);
@@ -89,14 +94,16 @@ export async function applyJob(userId: string, jobId: string) {
   try {
     const user = await User.findByIdAndUpdate(
       { _id: userId },
-      { $push: { appliedTo: jobId } },
+      { $addToSet: { appliedTo: jobId } },
       { new: true }
-    );
+    )
+      .populate("jobs")
+      .populate("appliedTo");
     const job = await Jobs.findByIdAndUpdate(
       { _id: jobId },
-      { $push: { appliedUsers: user } },
+      { $addToSet: { appliedUsers: user } },
       { new: true }
-    );
+    ).populate("user");
 
     return { user, job };
   } catch (error: any) {
@@ -110,6 +117,14 @@ export async function deleteJob(jobId: string) {
     });
     if (!job) throw new Error("contract not found");
     return { job };
+  } catch (error: any) {
+    throw new Error(error.message as string);
+  }
+}
+export async function getJobs() {
+  try {
+    const jobs: JobsType[] | null = await Jobs.find();
+    return { jobs };
   } catch (error: any) {
     throw new Error(error.message as string);
   }

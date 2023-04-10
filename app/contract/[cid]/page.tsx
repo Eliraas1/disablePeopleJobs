@@ -7,17 +7,19 @@ import useSWRMutation from "swr/mutation";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
-  deleteContractById,
-  selectContracts,
+  selectJobs,
+  // deleteContractById,
+  // selectContracts,
   selectUser,
   selectUserToken,
-  setSendingContract,
+  // setSendingContract,
 } from "store/slices/userSlice";
 // import { carBrands } from "../../../constants";
 import { Toast } from "flowbite-react";
 import { MyButton } from "app/Components/MyButton";
 import { setMessage } from "store/slices/showSlice";
 import moment from "moment";
+import { jobCategories } from "../../../constants";
 
 interface FormErrors {
   email?: string;
@@ -32,7 +34,7 @@ export default function EditContract({ params: { cid } }: props) {
   const router = useRouter();
   const token = useAppSelector(selectUserToken);
   const user = useAppSelector(selectUser);
-  const contract = useAppSelector(selectContracts);
+  const jobs = useAppSelector(selectJobs);
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [sellerEmail, setSellerEmail] = useState("");
@@ -43,18 +45,18 @@ export default function EditContract({ params: { cid } }: props) {
   useEffect(() => {
     if (user.email) setSellerEmail(user.email);
   }, [user.email]);
-  useEffect(() => {
-    if (contract?.sending && contract?.sending.length > 0) {
-      let cont = contract?.sending.find((cont) => cont._id == cid);
-      setEmail(cont?.to?.email || "");
-      const exp = moment(cont?.expires).toString();
-      // const exp = new Date(cont?.expires);
-      console.log(new Date(exp));
-      setStartDate(new Date(exp));
+  // useEffect(() => {
+  //   if (contract?.sending && contract?.sending.length > 0) {
+  //     let cont = contract?.sending.find((cont) => cont._id == cid);
+  //     setEmail(cont?.to?.email || "");
+  //     const exp = moment(cont?.expires).toString();
+  //     // const exp = new Date(cont?.expires);
+  //     console.log(new Date(exp));
+  //     setStartDate(new Date(exp));
 
-      carBrand.current = cont?.carBrand || "";
-    }
-  }, [contract?.sending.length]);
+  //     carBrand.current = cont?.carBrand || "";
+  //   }
+  // }, [contract?.sending.length]);
   useEffect(() => {
     return () => {
       clearTimeout(timer);
@@ -99,7 +101,7 @@ export default function EditContract({ params: { cid } }: props) {
       // console.log(jsonRes);
       if (jsonRes.success) {
         // document.querySelector(".my-toast")?.classList?.toggle("hidden");
-        dispatch(deleteContractById(cid));
+        // dispatch(deleteContractById(cid));
         dispatch(
           setMessage(`Contract of ${carBrand.current} Successfully Deleted!`)
         );
@@ -136,13 +138,13 @@ export default function EditContract({ params: { cid } }: props) {
         timer = setTimeout(() => {
           document.querySelector(".my-toast")?.classList?.toggle("hidden");
         }, 3500);
-        dispatch(
-          setSendingContract({
-            to: { email },
-            carBrand: carBrand.current,
-            expires: startDate?.toISOString(),
-          })
-        );
+        // dispatch(
+        //   setSendingContract({
+        //     to: { email },
+        //     carBrand: carBrand.current,
+        //     expires: startDate?.toISOString(),
+        //   })
+        // );
       } else {
         console.log(jsonRes.error);
         setErrors({ server: jsonRes.error });
@@ -158,7 +160,7 @@ export default function EditContract({ params: { cid } }: props) {
   }
   function CarBrandsSearch({ q }: props) {
     const [query, setQuery] = useState<string>(q.current || "");
-    const [options, setOptions] = useState<string[]>(carBrands);
+    const [options, setOptions] = useState<string[]>(jobCategories);
     // const [options, setOptions] = useState<string[]>(carBrands);
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [isOptionClicked, setIsOptionClicked] = useState<boolean>(false);
@@ -175,8 +177,8 @@ export default function EditContract({ params: { cid } }: props) {
       q.current = value;
 
       // Filter the options based on the input value
-      const filteredOptions = carBrands.filter((brand: string) =>
-        brand.toLowerCase().includes(value.toLowerCase())
+      const filteredOptions = jobCategories.filter((job: string) =>
+        job.toLowerCase().includes(value.toLowerCase())
       );
       setOptions(filteredOptions);
       inputRef.current?.focus();
@@ -331,7 +333,7 @@ export default function EditContract({ params: { cid } }: props) {
                           Car Brand
                         </label>
 
-                        <CarBrandsSearch q={carBrand} />
+                        {/* <CarBrandsSearch q={carBrand} /> */}
                       </div>
                       <div className="col-span-6 sm:col-span-3 ">
                         <label

@@ -50,6 +50,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => {
+      console.log({ acrion: action.payload });
       state = { ...state, ...action.payload };
       return state;
     },
@@ -79,7 +80,11 @@ export const userSlice = createSlice({
       return state;
     },
     apply: (state, action: PayloadAction<JobsType>) => {
-      state.appliedTo.push(action.payload);
+      const newJobId = action.payload._id;
+
+      const isExist =
+        state.appliedTo.filter((item) => item._id === newJobId)?.length > 0;
+      !isExist && state.appliedTo.push(action.payload);
       return state;
     },
   },

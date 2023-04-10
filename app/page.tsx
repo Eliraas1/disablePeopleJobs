@@ -2,16 +2,13 @@
 import { UserType } from "Models/User";
 import React, { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
-import {
-  selectContracts,
-  selectUser,
-  selectUserToken,
-} from "store/slices/userSlice";
+import { JobsType, selectUser, selectUserToken } from "store/slices/userSlice";
 import { useAppSelector } from "store/hooks";
-import moment from "moment";
 import Link from "next/link";
 import { Tabs } from "flowbite-react";
-import ContractList from "./Components/ContractList";
+import JobList from "./Components/JobList";
+import { GetRequest, postRequest } from "pages/api/hello";
+import useSWRMutation from "swr/mutation";
 interface props {
   users: UserType;
 }
@@ -20,20 +17,29 @@ interface FormErrors {
   password?: string;
 }
 function Home() {
-  // await dbConnect();
-  // const users = await getUsers();
-  // const res = await fetch("http://localhost:3000/api/users");
-  // console.log(await res.json());
-  // console.log(res);
-
   const router = useRouter();
   const token = useAppSelector(selectUserToken);
+  const [allJobs, setAllJobs] = useState<JobsType[]>([]);
   if (!token) redirect("/login");
   const user = useAppSelector(selectUser);
-  const contracts = useAppSelector(selectContracts);
+  const {
+    trigger: getAllJobs,
+    data,
+    error,
+    isMutating,
+  } = useSWRMutation("/api/jobs/getAll", GetRequest);
+  const handleGetAllJobs = async () => {
+    // @ts-ignore
+    const a = await getAllJobs();
+    const response = await a?.json();
+    const jobs = response.data.jobs;
+    setAllJobs(jobs);
+  };
+  useEffect(() => {
+    handleGetAllJobs();
+  }, []);
   useEffect(() => {
     token ? router.push("/") : router.push("/login");
-    // if (!isSignIn) redirect("/login");
   }, [token]);
   return (
     <div className="w-full  flex justify-center">
@@ -45,14 +51,14 @@ function Home() {
               aria-label="Tabs with underline"
               style="underline"
             >
-              <Tabs.Item title="Sending Contracts">
+              <Tabs.Item title="Applied Jobs">
                 <div className=" max-w-7xl max-h-[74vh] overflow-x-auto overflow-y-auto animate__animated animate__fadeInLeft">
                   {/* <h1 className="  text-center my-5 text-3xl">My Contracts</h1> */}
-                  {contracts?.sending && contracts?.sending.length > 0 ? (
-                    <ContractList contracts={contracts?.sending} />
+                  {user.appliedTo ? (
+                    <JobList jobs={user.appliedTo} />
                   ) : (
                     <div className="flex-col align-center justify-center text-center">
-                      <h1 className="">No contracts yet...</h1>
+                      <h1 className="">No jobs yet...</h1>
                       <Link
                         href="/create-contract"
                         className="text-center inline-flex justify-center my-2  rounded-md border border-transparent  hover:bg-blue-700 text-white font-bold py-2 px-4  focus:outline-none focus:shadow-outline flex-row bg-slate-600 items-center"
@@ -63,17 +69,28 @@ function Home() {
                   )}
                 </div>
               </Tabs.Item>
-              <Tabs.Item
-                title="Receiving Contracts"
-                className="link:text-black"
-              >
+              <Tabs.Item title="My Jobs">
+                <div className=" max-w-7xl max-h-[74vh] overflow-x-auto overflow-y-auto animate__animated animate__fadeInLeft">
+                  {user.jobs ? (
+                    <JobList jobs={user.jobs} />
+                  ) : (
+                    <div className="flex-col align-center justify-center text-center">
+                      <h1 className="">No jobs yet...</h1>
+                      <Link
+                        href="/create-contract"
+                        className="text-center inline-flex justify-center my-2  rounded-md border border-transparent  hover:bg-blue-700 text-white font-bold py-2 px-4  focus:outline-none focus:shadow-outline flex-row bg-slate-600 items-center"
+                      >
+                        Create One Now!
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </Tabs.Item>
+              <Tabs.Item title="All jobs" className="link:text-black">
                 <div className=" max-w-7xl max-h-[74vh] overflow-x-auto overflow-y-auto animate__animated animate__fadeInRight">
                   {/* <h1 className="  text-center my-5 text-3xl">My Contracts</h1> */}
-                  {contracts?.receive && contracts?.receive.length > 0 ? (
-                    <ContractList
-                      contracts={contracts?.receive}
-                      myId={user._id}
-                    />
+                  {allJobs ? (
+                    <JobList jobs={allJobs} />
                   ) : (
                     <h1>No contracts yet...</h1>
                   )}
@@ -88,7 +105,3 @@ function Home() {
 }
 
 export default Home;
-
-// function LoginForm() {
-
-// }

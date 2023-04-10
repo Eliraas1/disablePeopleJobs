@@ -1,44 +1,29 @@
-"use client";
-import { postRequest } from "pages/api/hello";
-import { jobCategories } from "../../constants";
-import React, { useState } from "react";
-import { JobsType } from "store/slices/userSlice";
-import useSWRMutation from "swr/mutation";
+import React from "react";
 
-const initialValues: JobsType = {
-  title: "",
-  description: "",
-  location: "",
-  category: "",
-  subCategory: "",
-  type: "Full time",
-};
 const CreateJobForm = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [jobData, setJobData] = useState<JobsType>(initialValues);
-  const {
-    trigger: addJob,
-    data,
-    error,
-    isMutating,
-  } = useSWRMutation("/api/jobs/create", postRequest);
-  const resetFields = () => setJobData(initialValues);
-  const handleChange = (event: any) => {
+  const [jobData, setJobData] = useState({
+    title: "",
+    description: "",
+    location: "",
+    category: "",
+    subCategory: "",
+    type: "",
+  });
+
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setJobData({ ...jobData, [name]: value });
   };
 
-  const handleSubmit = async (event: any) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    setIsLoading(true);
-    await addJob(jobData);
-    resetFields();
-    setIsLoading(false);
+    // Here you can send the jobData object to an API to add a new job
+    console.log(jobData);
   };
 
   return (
-    <div className="max-w-sm  mx-auto bg-white p-6 rounded-md mt-2">
-      <h1 className="text-2xl font-semibold mb-4">Add New Job</h1>
+    <div className="max-w-md mx-auto bg-slate-900  p-6 rounded-md shadow-md">
+      <h1 className="text-2xl font-semibold mb-4">Add New Jsob</h1>
       <form onSubmit={handleSubmit}>
         <label className="block mb-4">
           Title
@@ -75,22 +60,17 @@ const CreateJobForm = () => {
         </label>
         <label className="block mb-4">
           Category
-          <select
+          <input
+            type="text"
             name="category"
             value={jobData.category}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-          >
-            {jobCategories.map((category: string) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+          />
         </label>
         <label className="block mb-4">
-          Sub category
+          Subcategory
           <input
             type="text"
             name="subCategory"
@@ -102,24 +82,20 @@ const CreateJobForm = () => {
         </label>
         <label className="block mb-4">
           Type
-          <select
+          <input
+            type="text"
             name="type"
             value={jobData.type}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-          >
-            <option value="Part time">Full-time</option>
-            <option value="Part time">Part-time</option>
-            <option value="Student">Student position</option>
-          </select>
+          />
         </label>
         <button
-          disabled={isLoading}
           type="submit"
           className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200"
         >
-          {isLoading ? "Adding Job..." : "Add Job"}
+          Add Job
         </button>
       </form>
     </div>

@@ -45,7 +45,7 @@ export default function RootLayout({
             <Bgc />
             <NavBar />
           </header>
-          <SideBar />
+          {/* <SideBar /> */}
           {/* <div className="h-screen grid place-content-center">
             <div className="h-screen absolute -z-10">
             </div>

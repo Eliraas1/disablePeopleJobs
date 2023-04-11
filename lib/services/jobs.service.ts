@@ -50,11 +50,24 @@ export async function getJobById(_id: string) {
 export async function getJobByField(field: any) {
   try {
     const query = {
-      field,
+      ...(field.location && {
+        location: field.location,
+      }),
+      ...(field.title && {
+        title: field.title,
+      }),
+      ...(field.type && {
+        type: field.type,
+      }),
+      ...(field.category && {
+        category: field.category,
+      }),
       ...(field.description && {
         description: { $regex: field.description, $options: "i" },
       }),
     };
+
+    console.log("in server, query", query);
     const jobs: JobsType[] = await Jobs.find({ query })
       .sort({ createdAt: -1 })
       .populate([

@@ -7,9 +7,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const userId = req.headers["x-header"] || "";
-      const query = req.body;
+      const query = req.query;
       if (!userId) return res.status(401).json("not Authorized");
       // if (!query) return res.status(400).json("query must be sent to body");
+      console.log({ query });
       const data = await getJobByField(query);
       return res.status(200).json({ success: true, data });
     } catch (error: any) {

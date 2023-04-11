@@ -114,6 +114,12 @@ function NavBar() {
               >
                 Create Jobs
               </Link>
+              <Link
+                href="/search"
+                className="text-white whitespace-nowrap font-normal text-lg hover:text-gray-400 "
+              >
+                search
+              </Link>
 
               <div
                 // onClick={openSideBar}

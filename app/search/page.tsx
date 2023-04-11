@@ -4,6 +4,7 @@ import { jobCategories } from "../../constants";
 import { getRequest, postRequest } from "pages/api/hello";
 import React, { useState } from "react";
 import useSWRMutation from "swr/mutation";
+import { JobsType } from "store/slices/userSlice";
 
 const Search = () => {
   //TODO: change to refs
@@ -12,6 +13,7 @@ const Search = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("Full-time");
+  const [jobs, setJobs] = useState<JobsType[]>([]);
   //TODO: set all jobs in redux and display them here at first
   const {
     trigger: search,
@@ -51,13 +53,16 @@ const Search = () => {
     //TODO: use swr and set jobs that return from api
     const _data = await search(body as any);
     const results = await _data?.json();
-    console.log({ results });
+    const _jobs = results.data;
+    setJobs(_jobs);
+    // console.log({ _jobs });
   };
 
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-3xl font-bold mb-4">Search Jobs</h1>
       <form className="flex justify-center items-center">
+        {/* Category Dropdown */}
         <select
           name="category"
           value={category}
@@ -65,12 +70,14 @@ const Search = () => {
           className="mr-2 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none"
           required
         >
+          <option value="">Category</option>
           {jobCategories.map((category: string) => (
             <option key={category} value={category}>
               {category}
             </option>
           ))}
         </select>
+        {/* Location Input */}
         <input
           type="text"
           placeholder="Location"
@@ -78,6 +85,7 @@ const Search = () => {
           value={location}
           onChange={handleLocationChange}
         />
+        {/* Title Input */}
         <input
           type="text"
           placeholder="Title"
@@ -85,6 +93,7 @@ const Search = () => {
           value={title}
           onChange={handleTitleChange}
         />
+        {/* Description Input */}
         <input
           type="text"
           placeholder="Description"
@@ -92,6 +101,7 @@ const Search = () => {
           value={description}
           onChange={handleDescriptionChange}
         />
+        {/* Position Type Dropdown */}
         <select
           name="type"
           value={type}
@@ -103,6 +113,7 @@ const Search = () => {
           <option value="Part time">Part-time</option>
           <option value="Student">Student position</option>
         </select>
+        {/* Search Button */}
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded-lg"
@@ -112,7 +123,9 @@ const Search = () => {
         </button>
       </form>
       {/* Render JobList component with search parameters */}
-      <JobList jobs={[]} />
+      <div className=" container mt-4 p-10 justify-center items-center bg-opacity-60 bg-slate-600 rounded-2xl ">
+        <JobList jobs={jobs} />
+      </div>
     </div>
   );
 };

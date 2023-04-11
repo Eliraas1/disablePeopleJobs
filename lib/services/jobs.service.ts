@@ -51,10 +51,10 @@ export async function getJobByField(field: any) {
   try {
     const query = {
       ...(field.location && {
-        location: field.location,
+        location: { $regex: field.location, $options: "i" },
       }),
       ...(field.title && {
-        title: field.title,
+        title: { $regex: field.title, $options: "i" },
       }),
       ...(field.type && {
         type: field.type,
@@ -68,7 +68,7 @@ export async function getJobByField(field: any) {
     };
 
     console.log("in server, query", query);
-    const jobs: JobsType[] = await Jobs.find({ query })
+    const jobs: JobsType[] = await Jobs.find(query)
       .sort({ createdAt: -1 })
       .populate([
         {

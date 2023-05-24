@@ -10,12 +10,12 @@ const CreateJobForm = () => {
     type: "",
   });
 
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setJobData({ ...jobData, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: any) => {
     event.preventDefault();
     // Here you can send the jobData object to an API to add a new job
     console.log(jobData);

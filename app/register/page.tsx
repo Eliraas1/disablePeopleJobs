@@ -60,7 +60,7 @@ function Register() {
       console.log(jsonRes);
 
       if (jsonRes.success) {
-        dispatch(login({ emailFromRegister: email }));
+        dispatch(login({ emailFromRegister: email } as UserState));
         router.push("/login");
       }
       if (jsonRes.error) setErrors({ server: jsonRes.error });

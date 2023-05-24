@@ -27,7 +27,7 @@ function NavBar() {
   ) => {
     event.preventDefault();
     try {
-      const res = await LogoutUser();
+      const res = await LogoutUser(null);
       const jsonRes = await res?.json();
       console.log(jsonRes);
 

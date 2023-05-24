@@ -1,6 +1,7 @@
-import Jobs from "Models/Jobs";
+// import Jobs from "Models/Jobs";
+import Jobs, { JobsType } from "Models/Jobs";
 import User, { UserType } from "Models/User";
-import { applyJob } from "./jobs.service";
+// import { applyJob } from "./jobs.service";
 
 export async function getUsers() {
   try {
@@ -46,11 +47,16 @@ export const getUserByEmail = async (
     if (password) {
       user = await User.findOne({
         email,
-      })
-        .select("+password")
-        .populate("jobs")
-        .populate("appliedTo");
+      }).select("+password");
+      // .populate("jobs")
+      // .populate("appliedTo");
+      const { jobs, appliedTo } = user ?? {};
+      const allJobs = await Jobs.find({ _id: { $in: jobs } });
+      const allAppliedTo = await Jobs.find({ _id: { $in: appliedTo } });
+      user.jobs = allJobs;
+      user.appliedTo = allAppliedTo;
     } else {
+      console.log({ email });
       user = await User.findOne({
         email,
       })

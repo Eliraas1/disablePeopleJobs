@@ -39,6 +39,7 @@ const Search = () => {
   };
   const handlePositionChange = (event: any) => {
     setType(event.target.value);
+    console.log({ type, dada: event.target.value });
   };
 
   const handleSubmit = async (event: any) => {
@@ -49,11 +50,13 @@ const Search = () => {
       location,
       title,
       description,
+      type,
     };
     //TODO: use swr and set jobs that return from api
     const _data = await search(body as any);
     const results = await _data?.json();
     const _jobs = results.data;
+
     setJobs(_jobs);
     // console.log({ _jobs });
   };
@@ -109,7 +112,7 @@ const Search = () => {
           className="mr-2 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none"
           required
         >
-          <option value="Part time">Full-time</option>
+          <option value="Full-time">Full-time</option>
           <option value="Part time">Part-time</option>
           <option value="Student">Student position</option>
         </select>

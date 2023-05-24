@@ -51,5 +51,11 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
+
+// UserSchema.pre("findOne", function (next: any) {
+//   this.populate("jobs").populate("appliedTo");
+//   next();
+// });
+
 export default mongoose.models.User<UserType> ||
   mongoose.model<UserType>("User", UserSchema);

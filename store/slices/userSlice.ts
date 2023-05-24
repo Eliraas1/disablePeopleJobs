@@ -66,6 +66,7 @@ export const userSlice = createSlice({
       state.jobs?.push(action.payload);
       return state;
     },
+
     deleteJobById: (state, action: PayloadAction<string>) => {
       const index = state.jobs?.findIndex(
         (item) => item._id === action.payload

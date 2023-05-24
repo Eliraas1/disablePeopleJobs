@@ -16,11 +16,17 @@ interface FormErrors {
   email?: string;
   password?: string;
 }
+interface UserJobs {
+  jobs?: JobsType[];
+  appliedTo?: JobsType[];
+}
 function Home() {
   const router = useRouter();
   const token = useAppSelector(selectUserToken);
   const [allJobs, setAllJobs] = useState<JobsType[]>([]);
-  if (!token) redirect("/login");
+  const [jobs, setJobs] = useState<UserJobs>({});
+  // const [allJobs, setAllJobs] = useState<JobsType[]>([]);
+  // if (!token) redirect("/login");
   const user = useAppSelector(selectUser);
   const {
     trigger: getAllJobs,
@@ -28,6 +34,12 @@ function Home() {
     error,
     isMutating,
   } = useSWRMutation("/api/jobs/getAll", GetRequest);
+  const {
+    trigger: getAllUserJobs,
+    // data,
+    // error,
+    // isMutating,
+  } = useSWRMutation("/api/jobs/getMyJobs", GetRequest);
   const handleGetAllJobs = async () => {
     // @ts-ignore
     const a = await getAllJobs();
@@ -35,12 +47,26 @@ function Home() {
     const jobs = response.data.jobs;
     setAllJobs(jobs);
   };
+  const setAllUserJobs = async () => {
+    // @ts-ignore
+    const a = await getAllUserJobs();
+    const response = await a?.json();
+    const jobs = response.data;
+    console.log({ jobs });
+    setJobs(jobs);
+  };
   useEffect(() => {
+    setAllUserJobs();
     handleGetAllJobs();
   }, []);
-  useEffect(() => {
-    token ? router.push("/") : router.push("/login");
-  }, [token]);
+  // useEffect(() => {
+  //   user ? router.push("/") : router.push("/login");
+  // }, [user]);
+  const a = (e: any) => {
+    e.preventDefault();
+    setAllUserJobs();
+  };
+
   return (
     <div className="w-full  flex justify-center">
       <div className="h-[32rem] w-[93vw]  max-w-6xl mx-2    py-10  ">
@@ -50,12 +76,19 @@ function Home() {
               className="self-center link:text-black"
               aria-label="Tabs with underline"
               style="underline"
+              onChange={a}
+              onClick={a}
             >
-              <Tabs.Item title="Applied Jobs">
+              <Tabs.Item
+                title="Applied Jobs"
+                onAuxClick={a}
+                onAnimationEnd={a}
+                onClickCapture={a}
+              >
                 <div className=" max-w-7xl max-h-[74vh] overflow-x-auto overflow-y-auto animate__animated animate__fadeInLeft">
                   {/* <h1 className="  text-center my-5 text-3xl">My Contracts</h1> */}
-                  {user.appliedTo ? (
-                    <JobList jobs={user.appliedTo} />
+                  {jobs?.appliedTo ? (
+                    <JobList jobs={jobs.appliedTo} showApply={false} />
                   ) : (
                     <div className="flex-col align-center justify-center text-center">
                       <h1 className="">No jobs yet...</h1>
@@ -71,8 +104,8 @@ function Home() {
               </Tabs.Item>
               <Tabs.Item title="My Jobs">
                 <div className=" max-w-7xl max-h-[74vh] overflow-x-auto overflow-y-auto animate__animated animate__fadeInLeft">
-                  {user.jobs ? (
-                    <JobList jobs={user.jobs} />
+                  {jobs?.jobs ? (
+                    <JobList jobs={jobs.jobs} />
                   ) : (
                     <div className="flex-col align-center justify-center text-center">
                       <h1 className="">No jobs yet...</h1>

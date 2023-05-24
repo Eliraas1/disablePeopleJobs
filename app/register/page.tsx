@@ -18,7 +18,7 @@ interface FormErrors {
 
 function Register() {
   const token = useAppSelector(selectUserToken);
-  if (token) redirect("/");
+  // if (token) redirect("/");
   const {
     trigger: RegisterUser,
     data,

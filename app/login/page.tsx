@@ -30,7 +30,7 @@ interface FormErrors {
 function Login() {
   const router = useRouter();
   const token = useAppSelector(selectUserToken);
-  if (token) redirect("/");
+  // if (token) redirect("/");
   const dispatch = useAppDispatch();
   const emailFromRegister = useAppSelector(selectEmailFromRegister);
   const [email, setEmail] = useState(
@@ -71,6 +71,7 @@ function Login() {
       if (jsonRes.success) {
         console.log(jsonRes.data);
         dispatch(login({ ...jsonRes.data.user }));
+        router.push("/");
       } else {
         console.log(jsonRes.message);
         setErrors({ server: jsonRes.message });
@@ -84,11 +85,11 @@ function Login() {
     // perform authentication here
   };
   useEffect(() => {}, [email, password]);
-  useEffect(() => {
-    if (token) {
-      router.push("/");
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     router.push("/");
+  //   }
+  // }, [token]);
 
   return (
     <div className="h-[32rem] opacity-[0.93]  grid place-content-center  ">

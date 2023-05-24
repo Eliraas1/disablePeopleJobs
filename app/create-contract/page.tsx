@@ -4,6 +4,8 @@ import { jobCategories } from "../../constants";
 import React, { useState } from "react";
 import { JobsType } from "store/slices/userSlice";
 import useSWRMutation from "swr/mutation";
+import { redirect } from "next/navigation";
+import router from "next/router";
 
 const initialValues: JobsType = {
   title: "",
@@ -48,7 +50,7 @@ const CreateJobForm = () => {
             value={jobData.title}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            // required
           />
         </label>
         <label className="block mb-4">
@@ -59,7 +61,7 @@ const CreateJobForm = () => {
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
-            required
+            // required
           />
         </label>
         <label className="block mb-4">
@@ -70,7 +72,7 @@ const CreateJobForm = () => {
             value={jobData.location}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            // required
           />
         </label>
         <label className="block mb-4">
@@ -80,7 +82,7 @@ const CreateJobForm = () => {
             value={jobData.category}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            // required
           >
             {jobCategories.map((category: string) => (
               <option key={category} value={category}>
@@ -97,7 +99,7 @@ const CreateJobForm = () => {
             value={jobData.subCategory}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            // required
           />
         </label>
         <label className="block mb-4">
@@ -107,9 +109,9 @@ const CreateJobForm = () => {
             value={jobData.type}
             onChange={handleChange}
             className="w-full mt-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
+            // required
           >
-            <option value="Part time">Full-time</option>
+            <option value="Full-time">Full-time</option>
             <option value="Part time">Part-time</option>
             <option value="Student">Student position</option>
           </select>

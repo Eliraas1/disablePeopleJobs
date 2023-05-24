@@ -40,8 +40,19 @@ export async function getJobById(_id: string) {
           path: "user",
           select: "-password",
         },
-      ]);
+      ])
+      .populate("appliedUsers");
     return jobs;
+  } catch (error: any) {
+    throw new Error(error.message as string);
+  }
+}
+export async function getUserJobs(userId: string) {
+  try {
+    const user = await User.findById(userId)
+      .populate("jobs")
+      .populate("appliedTo");
+    return { jobs: user.jobs, appliedTo: user.appliedTo };
   } catch (error: any) {
     throw new Error(error.message as string);
   }
@@ -49,6 +60,14 @@ export async function getJobById(_id: string) {
 // {title : 'electrical ', description:" blah"}
 export async function getJobByField(field: any) {
   try {
+    const types: string[] = [];
+    if (field.type) {
+      types[0] = field.type;
+      const charToReplace = (field.type as string).includes("-") ? "-" : " ";
+      const replaceTo = (field.type as string).includes("-") ? " " : "-";
+      types[1] = (field.type as string).replace(charToReplace, replaceTo);
+    }
+
     const query = {
       ...(field.location && {
         location: { $regex: field.location, $options: "i" },
@@ -57,7 +76,7 @@ export async function getJobByField(field: any) {
         title: { $regex: field.title, $options: "i" },
       }),
       ...(field.type && {
-        type: field.type,
+        type: { $in: types },
       }),
       ...(field.category && {
         category: field.category,
@@ -67,7 +86,7 @@ export async function getJobByField(field: any) {
       }),
     };
 
-    console.log("in server, query", query);
+    console.log("in server, query", field, query);
     const jobs: JobsType[] = await Jobs.find(query)
       .sort({ createdAt: -1 })
       .populate([

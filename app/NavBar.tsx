@@ -34,6 +34,8 @@ function NavBar() {
       if (jsonRes.success) {
         dispatch(logout());
         // redirect("/login");
+
+        router.push("/login");
       } else {
         alert(jsonRes.message);
       }
@@ -44,11 +46,11 @@ function NavBar() {
     }
   };
 
-  useEffect(() => {
-    if (!isSignIn) {
-      router.push("/login");
-    }
-  }, [isSignIn]);
+  // useEffect(() => {
+  //   if (!isSignIn) {
+  //     router.push("/login");
+  //   }
+  // }, [isSignIn]);
   useEffect(() => {
     if (token) setIsSignIn(true);
     else setIsSignIn(false);

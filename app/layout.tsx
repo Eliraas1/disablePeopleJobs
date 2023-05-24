@@ -42,7 +42,7 @@ export default function RootLayout({
 
         <body className="bg-gray-600 h-[100%] ">
           <header className="">
-            <Bgc />
+            {/* <Bgc /> */}
             <NavBar />
           </header>
           {/* <SideBar /> */}

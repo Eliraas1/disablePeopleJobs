@@ -23,14 +23,12 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
     const _data = await returnData?.json();
     const res = _data?.data;
     const newJob = res.job;
-    console.log("jobId", newJob);
     dispatch(apply(newJob));
-    // console.log({ jobId });
   };
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {jobs?.map((job, index) => (
-        <JobCard key={job.title + index} job={job} onApply={onApply} />
+        <JobCard key={job._id} job={job} onApply={onApply} />
       ))}
     </div>
   );

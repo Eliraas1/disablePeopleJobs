@@ -5,7 +5,7 @@ import { getJobById } from "@/lib/services/jobs.service";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
   //TODO: check the method with body
-  if (req.method === "GET") {
+  if (req.method === "GET" || req.method === "POST") {
     try {
       const userId = req.headers["x-header"] || "";
       const { jobId } = req.body;
@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: error.message });
     }
   }
-  res.setHeader("Allow", ["GET"]);
+  res.setHeader("Allow", ["GET", "POST"]);
   res.status(425).end(`Method ${req.method} is not allowed.`);
 };
 

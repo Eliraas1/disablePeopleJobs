@@ -1,7 +1,9 @@
-import dbConnect from "@/lib/dbConnect";
-import Jobs from "Models/Jobs";
-import React from "react";
-
+"use client";
+import { set } from "mongoose";
+// import dbConnect from "@/lib/dbConnect";
+import { GetRequest, postRequest } from "pages/api/hello";
+import React, { useEffect } from "react";
+import useSwrMutation from "swr/mutation";
 const people = [
   { name: "John Doe", email: "john.doe@example.com" },
   { name: "Jane Smith", email: "jane.smith@example.com" },
@@ -12,20 +14,27 @@ type Props = {
   params: { id: string };
 };
 
-const getPeopleByJobId = async (jid: string) => {
-  await dbConnect();
-  const jobs = await Jobs.find({ _id: jid });
-  return jobs;
-};
-const d = (e: any) => {
-  console.log({ e });
-};
-const PeopleList: React.FC<Props> = ({ params: { id } }) => {
-  getPeopleByJobId(id).then(d).catch(d);
+const PeopleList = ({ params: { id } }: Props) => {
+  // const pple: any = await getPeopleByJobId(id);
+  const {
+    trigger: getPple,
+    data,
+    error,
+    isMutating,
+  } = useSwrMutation(`/api/jobs/getById`, postRequest);
 
+  const [pple, setPple] = React.useState([]);
+  const getRequest = async () => {
+    const s = await getPple({ jobId: id });
+    const d = await s?.json();
+    setPple(d.data.appliedUsers);
+  };
+  useEffect(() => {
+    getRequest();
+  }, []);
   return (
     <ul className="space-y-4">
-      {people.map((person, index) => (
+      {pple.map((person, index) => (
         <li
           key={index}
           className="flex items-center bg-gray-100 p-4 rounded shadow "
@@ -36,6 +45,7 @@ const PeopleList: React.FC<Props> = ({ params: { id } }) => {
           <div>
             <h3 className="text-lg font-bold">{person.name}</h3>
             <p className="text-gray-600">{person.email}</p>
+            {/* <p className="text-gray-600">{person.appliedTo}</p> */}
           </div>
         </li>
       ))}
